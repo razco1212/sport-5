@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שידור ערוץ ספורט</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #52ACFF;
+            background-image: linear-gradient(180deg, #52ACFF 25%, #FFE32C 100%);
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+            margin: 0; /* מוסיף רווח */
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        p {
+            color: #333;
+            font-size: 1.2em;
+        }
+        iframe {
+            width: 100%;
+            height: 800px; /* גובה ה-iframe */
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none; /* מתחילים עם ה-iframe מוסתר */
+            margin-top: 20px; /* רווח מעל ה-iframe */
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #FFE32C;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999; /* מבטיח שהשידור יהיה מעל כל האלמנטים */
+        }
+    </style>
+</head>
+<body>
+    <h1>ערוץ ספורט 5 לצפיה שירה</h1>
+    <p>ברוכים הבאים לערוץ ספורט 5 צפו בשידור חי.</p>
+    <button id="toggleButton">הראה שידור</button>
+    <iframe id="stream" src="https://dlhd.so/embed/stream-144.php" allowfullscreen></iframe>
+    <button id="fullscreenButton" style="display: none;">הגדל שידור</button>
+    <button id="exitFullscreenButton" style="display: none;">יציאה ממסך מלא</button>
+
+    <script>
+        const toggleButton = document.getElementById('toggleButton');
+        const stream = document.getElementById('stream');
+        const fullscreenButton = document.getElementById('fullscreenButton');
+        const exitFullscreenButton = document.getElementById('exitFullscreenButton');
+
+        toggleButton.onclick = function() {
+            if (stream.style.display === 'none' || stream.style.display === '') {
+                stream.style.display = 'block';
+                toggleButton.textContent = 'החבא שידור';
+                fullscreenButton.style.display = 'inline'; // מציג את כפתור הגדלת שידור
+            } else {
+                stream.style.display = 'none';
+                toggleButton.textContent = 'הראה שידור';
+                fullscreenButton.style.display = 'none'; // מסתיר את כפתור הגדלת שידור
+                exitFullscreenButton.style.display = 'none'; // מסתיר את כפתור יציאה ממסך מלא
+            }
+        }
+
+        fullscreenButton.onclick = function() {
+            if (stream.requestFullscreen) {
+                stream.requestFullscreen();
+            } else if (stream.mozRequestFullScreen) { // Firefox
+                stream.mozRequestFullScreen();
+            } else if (stream.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                stream.webkitRequestFullscreen();
+            } else if (stream.msRequestFullscreen) { // IE/Edge
+                stream.msRequestFullscreen();
+            }
+            fullscreenButton.style.display = 'none'; // מסתיר את כפתור הגדלת שידור
+            exitFullscreenButton.style.display = 'inline'; // מציג את כפתור יציאה ממסך מלא
+        }
+
+        exitFullscreenButton.onclick = function() {
+            exitFullscreen();
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+            exitFullscreenButton.style.display = 'none'; // מסתיר את כפתור יציאה ממסך מלא
+            fullscreenButton.style.display = 'inline'; // מציג את כפתור הגדלת שידור
+        }
+
+        document.addEventListener("fullscreenchange", updateFullscreenButtons);
+        document.addEventListener("mozfullscreenchange", updateFullscreenButtons);
+        document.addEventListener("webkitfullscreenchange", updateFullscreenButtons);
+        document.addEventListener("msfullscreenchange", updateFullscreenButtons);
+
+        function updateFullscreenButtons() {
+            if (!document.fullscreenElement) {
+                exitFullscreenButton.style.display = 'none'; // מסתיר את כפתור יציאה ממסך מלא
+                fullscreenButton.style.display = 'inline'; // מציג את כפתור הגדלת שידור
+            }
+        }
+    </script>
+</body>
+</html>
